@@ -35,7 +35,7 @@ export default function PlayerScreen() {
         const getQ = async () => {
 
             const queue = await getQueue()
-            console.log("active")
+          
             const index = queue.findIndex((i: any) => i?.url == activeTrack?.url)
 
             let q = queue && [...queue.slice(index + 1), ...queue.slice(0, index)]
@@ -49,10 +49,9 @@ export default function PlayerScreen() {
     const play = async (item: any) => {
         const queue = await TrackPlayer.getQueue()
         const index = queue?.findIndex((i: any) => i.url == item.url)
-        console.log(index)
+      
         if (index !== -1) {
-            console.log("index", index)
-            console.log("offset", queueOffset)
+           
             await TrackPlayer.skip(index);
             await TrackPlayer.play()
             activeQ?.length && setQueueOffset((index + queueOffset + 1) % (activeQ?.length + 1))
@@ -63,11 +62,11 @@ export default function PlayerScreen() {
         const queue = await getQueue()
         if (shuffle) {
             setShuffle(false);
-            console.log("active len", activeTracks.length)
+         
             const qindex = queue.findIndex((i: any) => i?.url == activeTrack?.url);
-            console.log("index", qindex)
+           
             const index = activeTracks.findIndex((i: any) => i?.url == activeTrack?.url);
-            console.log("index", index)
+     
             let q = [...activeTracks.slice(index + 1), ...activeTracks.slice(0, index)]
             const before = activeTracks.slice(0, index)
             const after = activeTracks.slice(index + 1);
@@ -83,15 +82,15 @@ export default function PlayerScreen() {
             setShuffle(true);
           
             const index = queue.findIndex((i: any) => i?.url == activeTrack?.url);
-            console.log("index", index)
+           
             let q = queue && [...queue.slice(index + 1), ...queue.slice(0, index)]
-            console.log("active tracks  len", queue.length)
-            console.log("q len", q.length)
+           
+           
             let shuffled = shuffleArray(q);
             let removed = [...queue.slice(0, index)]
             let removeIndexes = removed.map((i, index) => index)
             removed && await TrackPlayer.remove(removeIndexes)
-            console.log("shuffles length", shuffled.length)
+          
             setActiveQ(shuffled);
             setActiveQueue(shuffled);
             await TrackPlayer.removeUpcomingTracks();
@@ -177,10 +176,18 @@ export default function PlayerScreen() {
                                 activeQ && (<DraggableFlatList showsVerticalScrollIndicator={false} data={activeQ}
 
                                     onDragEnd={async ({ data }) => {
+                                        console.log("data",data)
                                         setActiveQ(data)
                                         setActiveQueue(data)
+                                        const queue=await getQueue()
+                                        const index=await TrackPlayer.getActiveTrackIndex()
+                                        console.log("queue",queue)
+                                        let removed = [...queue.slice(0, index)]
+                                        let removeIndexes = removed.map((i, index) => index)
+                                        removed && await TrackPlayer.remove(removeIndexes)
                                         await TrackPlayer.removeUpcomingTracks();
                                         await TrackPlayer.add(data)
+                                      
                                     }
 
                                     }

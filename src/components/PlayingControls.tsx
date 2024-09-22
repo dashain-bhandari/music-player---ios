@@ -16,6 +16,7 @@ import { useQueue } from "../hooks/useQueueStore"
 import { QueueContext } from "../context/queueContext"
 import { useContext } from "react"
 import { shuffleArray } from "../helper"
+import { useLastActiveTrack } from "../hooks/useLastActiveTrack"
 export type PlayPauseButton = {
     style?: ViewStyle,
     iconSize?: number
@@ -65,7 +66,7 @@ export const PlayerProgressBar = ({ style }: { style: ViewStyle }) => {
             progress={progress}
             minimumValue={min}
             maximumValue={max}
-            
+
             renderBubble={() => null}
             thumbWidth={0}
             onSlidingStart={() => isSliding.value = true}
@@ -148,26 +149,31 @@ export const PlayerRpeatToggle = () => {
 }
 
 
-export const Play = ({tracks,id}:any) => {
-  
-    const { activeTracks, activeQ, setActiveQ, setActiveTracks } = useContext(QueueContext);
-    const {activeQueueId,setActiveQueueId}=useQueue()
-    const play=async()=>{
- console.log(tracks)
- try {
-    await TrackPlayer.reset()
-         await TrackPlayer.add(tracks);
-         await TrackPlayer.play()
-         setActiveTracks(tracks)
-         setActiveQueueId(id)
- } catch (error) {
-    console.log(error)
- }
+export const Play = ({ tracks, id }: any) => {
+
+    const { activeTracks, activeQ, setActiveQ, setActiveTracks, setShuffle,setLastActive } = useContext(QueueContext);
+    const { activeQueueId, setActiveQueueId } = useQueue()
+    const lastActiveTrack=useLastActiveTrack()
+    const play = async () => {
+        console.log(tracks)
+        try {
+           
+          
+            setActiveTracks(tracks)
+            setActiveQueueId(id)
+            setShuffle(false);
+         
+            await TrackPlayer.setQueue(tracks);
+            await TrackPlayer.play()
+        
+        } catch (error) {
+            console.log(error)
+        }
         // await TrackPlayer.play()
- 
-      }
-      
-     
+
+    }
+
+
     return (
         <View style={{ backgroundColor: "#ccc", flexGrow: 1, borderRadius: 10 }} >
             <Button title="Play" color={colors.primary} onPress={play}></Button>
@@ -176,21 +182,24 @@ export const Play = ({tracks,id}:any) => {
 }
 
 
-export const Shuffle = ({tracks,id}:any) => {
+export const Shuffle = ({ tracks, id }: any) => {
 
-    const { activeTracks, activeQ, setActiveQ, setActiveTracks,setShuffle } = useContext(QueueContext)
-    const {activeQueueId,setActiveQueueId}=useQueue()
+    const { activeTracks, activeQ, setActiveQ, setActiveTracks, setShuffle,setLastActive } = useContext(QueueContext)
+    const { activeQueueId, setActiveQueueId } = useQueue()
+    const lastActiveTrack=useLastActiveTrack()
     const shuffle = async () => {
-        const shuffled=[...tracks].sort(()=>Math.random()-0.5)
-    
-        await TrackPlayer.reset()
-        await TrackPlayer.add(shuffled);
-        await TrackPlayer.play()
+        const shuffled = [...tracks].sort(() => Math.random() - 0.5)
+
+        setLastActive(lastActiveTrack)
+       
         setActiveTracks(tracks);
         setShuffle(true)
         setActiveQueueId(id)
-      }
-      
+        await TrackPlayer.reset()
+        await TrackPlayer.add(shuffled);
+        await TrackPlayer.play()
+    }
+
     return (<View style={{ flexGrow: 1, borderRadius: 10, borderColor: "#ccc", borderWidth: 1 }}>
         <Button title='Shuffle' color={"#ccc"} onPress={shuffle}></Button>
     </View>)

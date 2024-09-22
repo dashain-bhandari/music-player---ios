@@ -41,8 +41,8 @@ const filteredTracks =useMemo(()=>{
       />
 
 <View style={{ flexDirection: "row", gap: 10, width: "100%", justifyContent: "center", marginTop: 10 ,marginBottom:10}}>
-<Play tracks={filteredTracks} id={generateId("Songs",search)}></Play>
-<Shuffle tracks={filteredTracks} id={generateId("Songs",search)}></Shuffle>
+<Play tracks={filteredTracks} id={generateId("Favorites",search)}></Play>
+<Shuffle tracks={filteredTracks} id={generateId("Favorites",search)}></Shuffle>
         </View>
  <Tracklist id={generateId("Favorites",search)} tracks={filteredTracks}/>
     </View>

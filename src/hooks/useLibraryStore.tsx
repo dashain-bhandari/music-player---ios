@@ -15,9 +15,7 @@ const useLibraryStore = create<LibraryStore>()((set) => ({
         tracks: state.tracks.map((item) => {
 
             if (item.url == track.url) {
-                console.log("hii")
-                console.log("item",{ ...item, 
-                    rating:item.rating? 0 :1})
+                
                 return {
                     ...item, 
                     rating:item.rating? 0 :1

@@ -19,7 +19,7 @@ export default function Song({ item, id, onTrackSelect }: Songitem) {
 
     const rightActions = (swipeableRow: any) => {
 
-        console.log("row", swipeableRow)
+      
         return (<View
 
             style={{
@@ -36,7 +36,7 @@ export default function Song({ item, id, onTrackSelect }: Songitem) {
             </AppMenu>
         </View>)
     }
-    console.log("active",useActiveTrack())
+   
     const isActive = useActiveTrack()?.url == item?.url
     const { playing } = useIsPlaying();
     const { activeQueueId } = useQueue()

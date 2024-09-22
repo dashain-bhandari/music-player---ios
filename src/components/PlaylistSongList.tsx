@@ -57,24 +57,12 @@ export default function Songlist({ id,playlistName, tracks }: any) {
         }
         if (!isChanging) {
 
-            const before = tracks.slice(0, trackIndex)
-            const after = tracks.slice(trackIndex + 1);
-            await TrackPlayer.reset();
-            setQueueOffset(1)
-            await TrackPlayer.add(track)
-            await TrackPlayer.play()
-            if (shuffle) {
-                const q = [...after, ...before];
-                const shuffled = shuffleArray(q);
-                await TrackPlayer.add(shuffled);
-            }
-            else {
-                await TrackPlayer.add(after)
-                await TrackPlayer.add(before)
-            }
-
-            const queue = await getQueue()
-            setActiveQueue(queue)
+           
+                const queue=await getQueue()
+                            const index = queue?.findIndex((item: any) => item.url == track.url)
+                            await TrackPlayer.skip(index);
+                            await TrackPlayer.play()
+                    
         }
     }
 

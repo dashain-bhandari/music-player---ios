@@ -61,12 +61,12 @@ export default function SinglePlaylist() {
         />
         {/* buttons */}
         <View style={{ flexDirection: "row", gap: 10, width: "100%", justifyContent: "center", marginTop: 10 ,marginBottom:10}}>
-        <Play tracks={filteredTracks} id={generateId("Songs",search)}></Play>
-        <Shuffle tracks={filteredTracks} id={generateId("Songs",search)}></Shuffle>
+        <Play tracks={filteredTracks} id={generateId(playlist?.name,search)}></Play>
+        <Shuffle tracks={filteredTracks} id={generateId(playlist?.name,search)}></Shuffle>
         </View>
         {/* songs */}
         {
-          filteredTracks?.length > 0 && <Songlist tracks={filteredTracks} playlistName={playlist?.name} id={generateId(`${playlist?.name}-${search ?? ""}`)}></Songlist>
+          filteredTracks?.length > 0 && <Songlist tracks={filteredTracks} playlistName={playlist?.name} id={generateId(playlist?.name,search)}></Songlist>
         }
         {
           filteredTracks?.length == 0 && (

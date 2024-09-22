@@ -1,23 +1,26 @@
-import { Image, StyleSheet, Text, TouchableOpacity, View, ViewProps } from 'react-native'
-import React from 'react'
-import { useActiveTrack } from 'react-native-track-player'
+import { Image, StyleSheet, Text, TouchableHighlight, TouchableOpacity, View, ViewProps } from 'react-native'
+import React, { useContext } from 'react'
+import { Event, useActiveTrack, useTrackPlayerEvents } from 'react-native-track-player'
 import { UnknownTrack } from '../assets/image';
 import { defaultStyles } from '../styles';
 import { PlayPause, SkipNext } from './PlayingControls';
 import { useLastActiveTrack } from '../hooks/useLastActiveTrack';
 import { useNavigation } from '@react-navigation/native';
 import { MovingText } from './MovingText';
+import { QueueContext } from '../context/queueContext';
 
 export default function FloatingPlayer({ style }: ViewProps) {
     const navigation = useNavigation<any>()
+    const {lastActive}=useContext(QueueContext)
     const activeTrack = useActiveTrack();
     const lastTrack = useLastActiveTrack();
-    const displayedTrack = activeTrack ?? lastTrack
-    if (!displayedTrack) {
-        return null;
-    }
+    console.log("actss",activeTrack)
+    let displayedTrack =activeTrack??lastTrack??lastActive
+  if(!displayedTrack){
+    return null
+  }
     return (
-        <TouchableOpacity style={style} activeOpacity={0.9} onPress={() => {
+        <TouchableHighlight style={style} activeOpacity={0.9} onPress={() => {
             navigation.navigate("Player");
 
         }}>
@@ -41,7 +44,7 @@ export default function FloatingPlayer({ style }: ViewProps) {
                 </View>
 
             </>
-        </TouchableOpacity>
+        </TouchableHighlight>
     )
 }
 

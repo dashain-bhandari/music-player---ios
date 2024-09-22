@@ -13,16 +13,17 @@ import { SwipeListView } from 'react-native-swipe-list-view'
 import Feather from "react-native-vector-icons/MaterialCommunityIcons"
 import AppMenu from './AppMenu'
 import LoaderKit from 'react-native-loader-kit'
+import { useLastActiveTrack } from '../hooks/useLastActiveTrack'
 const Separator = () => {
     return <View style={{ borderBottomColor: colors.textMuted, borderWidth: StyleSheet.hairlineWidth, opacity: 0.3, marginVertical: 9, marginLeft: 80 }}></View>
 }
 export default function Tracklist({ id, tracks }: any) {
     console.log("tracks", tracks)
 
-    const { activeQueue, setActiveQueue, activeTracks, setActiveTracks, shuffle, setShuffle, setQueueOffset } = useContext(QueueContext);
+    const { activeQueue, setActiveQueue,lastActive,setLastActive, activeTracks, setActiveTracks, shuffle, setShuffle, setQueueOffset } = useContext(QueueContext);
     const { activeQueueId, setActiveQueueId } = useQueue();
     const useQueueOffset = useRef(0);
-
+    const lastActiveTrack=useLastActiveTrack()
     const onTrackSelect = async (track: Track) => {
         const trackIndex = tracks.findIndex((i: Track) => i.url == track.url)
         if (trackIndex == -1) {
@@ -34,7 +35,10 @@ export default function Tracklist({ id, tracks }: any) {
         if (isChanging) {
             const before = tracks.slice(0, trackIndex)
             const after = tracks.slice(trackIndex + 1);
+           
+            setLastActive(lastActiveTrack)
             await TrackPlayer.reset();
+        
             setQueueOffset(1)
             await TrackPlayer.add(track);
             await TrackPlayer.play();
@@ -56,8 +60,8 @@ export default function Tracklist({ id, tracks }: any) {
             setActiveQueue(queue)
         }
         if (!isChanging) {
-
-            const index = activeTracks?.findIndex((item: any) => item.url == track.url)
+const queue=await getQueue()
+            const index = queue?.findIndex((item: any) => item.url == track.url)
             await TrackPlayer.skip(index);
             await TrackPlayer.play()
         }

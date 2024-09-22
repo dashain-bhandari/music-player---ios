@@ -33,8 +33,7 @@ if (index !== -1) {
     return playlist; 
   });
 
-console.log(newArr[index])
-console.log("neww",newArr)
+
 setPlaylists(newArr)
 AsyncStorage.setItem("Playlist",JSON.stringify(newArr))
 }}
