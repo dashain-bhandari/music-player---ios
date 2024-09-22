@@ -30,7 +30,7 @@ export default function PlayerScreen() {
 
     const [activeQ, setActiveQ] = useState<Track[] | null>()
     const { activeQueue, setActiveQueue, showQueue, setShowQueue, shuffle, setShuffle, activeTracks, setActiveTracks, queueOffset, setQueueOffset } = useContext(QueueContext);
-    
+
     useEffect(() => {
         const getQ = async () => {
 
@@ -43,12 +43,12 @@ export default function PlayerScreen() {
 
         }
         getQ()
-    }, [activeTrack, activeTracks])
+    }, [activeTrack])
 
 
     const play = async (item: any) => {
-
-        const index = activeTracks?.findIndex((i: any) => i.url == item.url)
+        const queue = await TrackPlayer.getQueue()
+        const index = queue?.findIndex((i: any) => i.url == item.url)
         console.log(index)
         if (index !== -1) {
             console.log("index", index)
@@ -64,30 +64,40 @@ export default function PlayerScreen() {
         if (shuffle) {
             setShuffle(false);
             console.log("active len", activeTracks.length)
+            const qindex = queue.findIndex((i: any) => i?.url == activeTrack?.url);
+            console.log("index", qindex)
             const index = activeTracks.findIndex((i: any) => i?.url == activeTrack?.url);
             console.log("index", index)
             let q = [...activeTracks.slice(index + 1), ...activeTracks.slice(0, index)]
             const before = activeTracks.slice(0, index)
             const after = activeTracks.slice(index + 1);
             setActiveQ(q);
+            let removed = [...queue.slice(0, qindex)]
+            let removeIndexes = removed.map((i, index) => index)
+            removed && await TrackPlayer.remove(removeIndexes)
             await TrackPlayer.removeUpcomingTracks();
             await TrackPlayer.add(after)
             await TrackPlayer.add(before)
         }
         else {
             setShuffle(true);
-
+          
             const index = queue.findIndex((i: any) => i?.url == activeTrack?.url);
             console.log("index", index)
             let q = queue && [...queue.slice(index + 1), ...queue.slice(0, index)]
             console.log("active tracks  len", queue.length)
             console.log("q len", q.length)
             let shuffled = shuffleArray(q);
+            let removed = [...queue.slice(0, index)]
+            let removeIndexes = removed.map((i, index) => index)
+            removed && await TrackPlayer.remove(removeIndexes)
             console.log("shuffles length", shuffled.length)
             setActiveQ(shuffled);
             setActiveQueue(shuffled);
             await TrackPlayer.removeUpcomingTracks();
+            // setActiveTracks([activeTrack, ...shuffled])
             await TrackPlayer.add(shuffled)
+
         }
     }
 
@@ -266,6 +276,5 @@ const DismissPlayer = () => {
         </>
     )
 }
-
 
 

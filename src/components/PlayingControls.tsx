@@ -65,6 +65,7 @@ export const PlayerProgressBar = ({ style }: { style: ViewStyle }) => {
             progress={progress}
             minimumValue={min}
             maximumValue={max}
+            
             renderBubble={() => null}
             thumbWidth={0}
             onSlidingStart={() => isSliding.value = true}
@@ -177,7 +178,7 @@ export const Play = ({tracks,id}:any) => {
 
 export const Shuffle = ({tracks,id}:any) => {
 
-    const { activeTracks, activeQ, setActiveQ, setActiveTracks } = useContext(QueueContext)
+    const { activeTracks, activeQ, setActiveQ, setActiveTracks,setShuffle } = useContext(QueueContext)
     const {activeQueueId,setActiveQueueId}=useQueue()
     const shuffle = async () => {
         const shuffled=[...tracks].sort(()=>Math.random()-0.5)
@@ -185,7 +186,8 @@ export const Shuffle = ({tracks,id}:any) => {
         await TrackPlayer.reset()
         await TrackPlayer.add(shuffled);
         await TrackPlayer.play()
-        setActiveTracks(shuffled);
+        setActiveTracks(tracks);
+        setShuffle(true)
         setActiveQueueId(id)
       }
       

@@ -17,20 +17,20 @@ const Separator = () => {
     return <View style={{ borderBottomColor: colors.textMuted, borderWidth: StyleSheet.hairlineWidth, opacity: 0.3, marginVertical: 9, marginLeft: 80 }}></View>
 }
 export default function Tracklist({ id, tracks }: any) {
-console.log("tracks",tracks)
+    console.log("tracks", tracks)
 
-    const { activeQueue, setActiveQueue, activeTracks, setActiveTracks, shuffle, setShuffle,setQueueOffset } = useContext(QueueContext);
+    const { activeQueue, setActiveQueue, activeTracks, setActiveTracks, shuffle, setShuffle, setQueueOffset } = useContext(QueueContext);
     const { activeQueueId, setActiveQueueId } = useQueue();
     const useQueueOffset = useRef(0);
 
     const onTrackSelect = async (track: Track) => {
-        const trackIndex = tracks.findIndex((i: Track) => i.url== track.url)
+        const trackIndex = tracks.findIndex((i: Track) => i.url == track.url)
         if (trackIndex == -1) {
             return
         }
 
         const isChanging = id !== activeQueueId
-console.log("ischanging",isChanging)
+        console.log("ischanging", isChanging)
         if (isChanging) {
             const before = tracks.slice(0, trackIndex)
             const after = tracks.slice(trackIndex + 1);
@@ -38,8 +38,8 @@ console.log("ischanging",isChanging)
             setQueueOffset(1)
             await TrackPlayer.add(track);
             await TrackPlayer.play();
-            const q = [track,...after, ...before];
-            const p=[...after, ...before];
+            const q = [track, ...after, ...before];
+            const p = [...after, ...before];
             console.log("length", q.length)
             setActiveTracks(q);
             if (shuffle) {
@@ -57,15 +57,15 @@ console.log("ischanging",isChanging)
         }
         if (!isChanging) {
 
-            const index=activeTracks?.findIndex((item:any)=>item.url==track.url)
-           await TrackPlayer.skip(index);
+            const index = activeTracks?.findIndex((item: any) => item.url == track.url)
+            await TrackPlayer.skip(index);
             await TrackPlayer.play()
         }
     }
 
 
     return (
-      
+
         <FlatList
             contentContainerStyle={
                 {
@@ -89,9 +89,9 @@ const styles = StyleSheet.create({
         backgroundColor: 'red',
         justifyContent: 'center',
         height: '100%',
-        width: 75, 
-      },
-      hiddenText: {
+        width: 75,
+    },
+    hiddenText: {
         color: 'white',
-      },
+    },
 })

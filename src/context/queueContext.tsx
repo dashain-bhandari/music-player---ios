@@ -8,6 +8,7 @@ export const QueueContext = createContext<any>({
 export const QueueContextProvider=({children}:any)=>{
 
     const [activeQueue,setActiveQueue]=useState<any>();
+    const [activeQ,setActiveQ]=useState<any>();
     const [queueOffset,setQueueOffset]=useState<any>(1);
     const [shuffle,setShuffle]=useState<any>();
     const [showQueue,setShowQueue]=useState<any>()
@@ -27,7 +28,7 @@ export const QueueContextProvider=({children}:any)=>{
         }
         getPlaylist()
       }, [])
-    return <QueueContext.Provider value={{activeQueue,setActiveQueue,shuffle,setShuffle,showQueue,setShowQueue,activeTracks,setActiveTracks,queueOffset,setQueueOffset,playlists,setPlaylists}}>
+    return <QueueContext.Provider value={{activeQueue,setActiveQueue,activeQ,setActiveQ,shuffle,setShuffle,showQueue,setShowQueue,activeTracks,setActiveTracks,queueOffset,setQueueOffset,playlists,setPlaylists}}>
 {
     children
 }

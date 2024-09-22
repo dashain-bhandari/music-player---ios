@@ -44,6 +44,7 @@ export default function PlaylistScreen() {
     }]
     console.log("neww", newPlaylist)
     setPlaylists(newPlaylist);
+    setModalVisible(false);
     try {
       await AsyncStorage.setItem("Playlist", JSON.stringify(newPlaylist))
     } catch (error) {
